@@ -22,8 +22,8 @@ public class UploadController {
 	}
 	
 	@PostMapping
-	public String uploadFile(@RequestParam("file") MultipartFile file) throws Exception {
-		csvService.processCSV(file);
+	public String uploadFile(@RequestParam("file") MultipartFile file, @RequestParam("userId") Long userId) throws Exception {
+		csvService.uploadCsv(file, userId);
 		return "File processed successfully";
 	}
 }

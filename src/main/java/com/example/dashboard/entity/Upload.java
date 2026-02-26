@@ -1,13 +1,16 @@
 package com.example.dashboard.entity;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -22,6 +25,16 @@ public class Upload {
 	private String filename;
 	private LocalDateTime uploadDate = LocalDateTime.now();
 	private String status; // pending, processed
+	
+	@OneToMany(mappedBy = "upload", cascade = CascadeType.ALL)
+	private List<DataRecord> dataRecords;
+	
+	public List<DataRecord> getDataRecords() {
+		return dataRecords;
+	}
+	public void setDataRecords(List<DataRecord> dataRecords) {
+		this.dataRecords = dataRecords;
+	}
 	public Long getId() {
 		return id;
 	}
