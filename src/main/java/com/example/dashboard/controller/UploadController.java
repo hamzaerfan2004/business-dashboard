@@ -12,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/uploads")
-@RequiredArgsConstructor
 public class UploadController {
 	
 	private final CSVService csvService;

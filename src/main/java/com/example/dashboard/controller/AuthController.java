@@ -12,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/auth")
-@RequiredArgsConstructor
 public class AuthController {
 	
 	private final UserService userService;
@@ -25,5 +24,19 @@ public class AuthController {
 	@PostMapping("/register")
 	public User register(@RequestBody User user) {
 		return userService.register(user);
+	}
+	
+	@PostMapping("/login")
+	public String login(@RequestBody User loginRequest) {
+	    User user = userService.userRepository.findByEmail(loginRequest.getEmail())
+	            .orElseThrow(() -> new RuntimeException("Invalid credentials"));
+
+	    boolean valid = userService.checkPassword(user, loginRequest.getPasswordHash());
+	    if (!valid) {
+	        throw new RuntimeException("Invalid credentials");
+	    }
+
+	    // For now, just return success text; later you can return JWT or session info
+	    return "Login successful for user: " + user.getEmail();
 	}
 }

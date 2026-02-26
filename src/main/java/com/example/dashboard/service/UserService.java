@@ -9,9 +9,8 @@ import com.example.dashboard.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 
 @Service
-@RequiredArgsConstructor
 public class UserService {
-	private final UserRepository userRepository;
+	public final UserRepository userRepository;
 	private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 	
 	public UserService(UserRepository userRepository) {
