@@ -12,24 +12,31 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.dashboard.entity.DataRecord;
 import com.example.dashboard.entity.Upload;
+import com.example.dashboard.entity.User;
 import com.example.dashboard.repository.DataRecordRepository;
 import com.example.dashboard.repository.UploadRepository;
+import com.example.dashboard.repository.UserRepository;
 
 @Service
 public class CSVService {
 	
 	private final UploadRepository uploadRepository;
     private final DataRecordRepository dataRecordRepository;
+    private final UserRepository userRepository;
 
-    public CSVService(UploadRepository uploadRepository, DataRecordRepository dataRecordRepository) {
+    public CSVService(UploadRepository uploadRepository, DataRecordRepository dataRecordRepository, UserRepository userRepository) {
         this.uploadRepository = uploadRepository;
         this.dataRecordRepository = dataRecordRepository;
+        this.userRepository = userRepository;
     }
 
     public Upload uploadCsv(MultipartFile file, Long userId) throws Exception {
+    	User user = userRepository.findById(userId)
+    			.orElseThrow(() -> new RuntimeException("User not found"));
         Upload upload = new Upload();
         upload.setFilename(file.getOriginalFilename());
         upload.setStatus("pending");
+        upload.setUser(user);
         // assign user via userRepository if needed
         uploadRepository.save(upload);
 
