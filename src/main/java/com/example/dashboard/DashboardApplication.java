@@ -6,6 +6,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.example.dashboard.entity.User;
@@ -18,6 +19,7 @@ public class DashboardApplication {
 		SpringApplication.run(DashboardApplication.class, args);
 	}
 	@Bean
+	@Profile("!test")
     CommandLineRunner init(UserRepository userRepository,
                            PasswordEncoder encoder) {
         return args -> {
