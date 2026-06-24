@@ -1,17 +1,48 @@
-import api from "./api";
+import { useState } from "react";
+import api from "../api";
 
-function Upload() {
+export default function Upload(){
 
-  const uploadFile = async (e) => {
-    const formData = new FormData();
-    formData.append("file", e.target.files[0]);
-    formData.append("userId", 1);
+    const[file,setFile]=useState();
 
-    await api.post("/api/uploads", formData);
-    alert("Uploaded!");
-  };
+    async function upload(){
 
-  return <input type="file" onChange={uploadFile} />;
+        const form=new FormData();
+
+        form.append("file",file);
+
+
+        await api.post(
+
+            "/api/uploads",
+
+            form
+
+        );
+
+        alert("Upload Successful");
+
+    }
+
+    return(
+
+        <div>
+
+            <h2>Upload CSV</h2>
+
+            <input
+                type="file"
+                onChange={(e)=>setFile(e.target.files[0])}
+            />
+
+            <br/>
+
+            <button onClick={upload}>
+                Upload
+            </button>
+
+        </div>
+
+    );
+
 }
-
-export default Upload;

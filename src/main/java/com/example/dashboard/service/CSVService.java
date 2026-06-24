@@ -30,8 +30,8 @@ public class CSVService {
         this.userRepository = userRepository;
     }
 
-    public Upload uploadCsv(MultipartFile file, Long userId) throws Exception {
-    	User user = userRepository.findById(userId)
+    public Upload uploadCsv(MultipartFile file, String email) throws Exception {
+    	User user = userRepository.findByEmail(email)
     			.orElseThrow(() -> new RuntimeException("User not found"));
         Upload upload = new Upload();
         upload.setFilename(file.getOriginalFilename());

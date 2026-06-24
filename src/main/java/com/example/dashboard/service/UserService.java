@@ -1,6 +1,6 @@
 package com.example.dashboard.service;
 
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.dashboard.entity.User;
@@ -11,10 +11,11 @@ import lombok.RequiredArgsConstructor;
 @Service
 public class UserService {
 	public final UserRepository userRepository;
-	private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+	private final PasswordEncoder passwordEncoder;
 	
-	public UserService(UserRepository userRepository) {
+	public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
 		this.userRepository = userRepository;
+		this.passwordEncoder = passwordEncoder;
 	}
 	
 	public User register(User user) {

@@ -1,27 +1,52 @@
 import { useState } from "react";
-import api from "./api";
+import axios from "axios";
 
-function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+export default function Login() {
 
-  const login = async () => {
-    const res = await api.post("/api/auth/login", {
-      email,
-      password,
-    });
+    const [email,setEmail]=useState("");
+    const [password,setPassword]=useState("");
 
-    localStorage.setItem("token", res.data);
-    alert("Logged in!");
-  };
+    async function login(){
 
-  return (
-    <div>
-      <input placeholder="Email" onChange={e => setEmail(e.target.value)} />
-      <input type="password" placeholder="Password" onChange={e => setPassword(e.target.value)} />
-      <button onClick={login}>Login</button>
-    </div>
-  );
+        const response=await axios.post(
+            "http://localhost:8080/api/auth/login",
+            {
+                email,
+                password
+            }
+        );
+
+        localStorage.setItem("token", response.data.token);
+
+        window.location="/upload";
+    }
+
+    return(
+
+        <div>
+
+            <h1>Business Dashboard</h1>
+
+            <input
+                placeholder="Email"
+                onChange={(e)=>setEmail(e.target.value)}
+            />
+
+            <br/>
+
+            <input
+                type="password"
+                placeholder="Password"
+                onChange={(e)=>setPassword(e.target.value)}
+            />
+
+            <br/>
+
+            <button onClick={login}>
+                Login
+            </button>
+
+        </div>
+
+    );
 }
-
-export default Login;
