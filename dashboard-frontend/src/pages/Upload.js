@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import api from "../api";
 import SummaryCard from "../components/SummaryCard";
+import CategoryBarChart from "../components/CategoryBarChart";
+import CategoryPieChart from "../components/CategoryPieChart";
 
 export default function Upload() {
 
     const [file, setFile] = useState();
-
     const [summary, setSummary] = useState(null);
-
     const [categories, setCategories] = useState([]);
 
     async function loadSummary() {
@@ -29,7 +29,6 @@ export default function Upload() {
     useEffect(() => {
 
         loadSummary();
-
         loadCategories();
 
     }, []);
@@ -45,168 +44,172 @@ export default function Upload() {
         alert("Upload Successful");
 
         loadSummary();
-
         loadCategories();
+
     }
 
     return (
 
-<div className="container mt-5">
+        <div className="container mt-5">
 
-<h1 className="text-center mb-5">
+            <h1 className="text-center mb-5">
+                Business Dashboard
+            </h1>
 
-Business Dashboard
+            {summary && (
 
-</h1>
+                <>
 
-{summary && (
+                    <div className="row">
 
-<>
+                        <SummaryCard
+                            title="Total Uploads"
+                            value={summary.totalUploads}
+                        />
 
-<div className="row">
+                        <SummaryCard
+                            title="Processed"
+                            value={summary.processedUploads}
+                        />
 
-<SummaryCard
+                        <SummaryCard
+                            title="Pending"
+                            value={summary.pendingUploads}
+                        />
 
-title="Total Uploads"
+                        <SummaryCard
+                            title="Records"
+                            value={summary.totalRecords}
+                        />
 
-value={summary.totalUploads}
+                    </div>
 
-/>
+                    <div className="row mt-4">
 
-<SummaryCard
+                        <div className="col-md-6">
 
-title="Processed"
+                            <div className="card shadow-sm">
 
-value={summary.processedUploads}
+                                <div className="card-body">
 
-/>
+                                    <h5>Total Value</h5>
 
-<SummaryCard
+                                    <h1>{summary.totalValue}</h1>
 
-title="Pending"
+                                </div>
 
-value={summary.pendingUploads}
+                            </div>
 
-/>
+                        </div>
 
-<SummaryCard
+                    </div>
 
-title="Records"
+                </>
 
-value={summary.totalRecords}
+            )}
 
-/>
+            <div className="card mt-4">
 
-</div>
+                <div className="card-body">
 
-<div className="row">
+                    <h3>Category Summary</h3>
 
-<div className="col-md-6">
+                    <table className="table table-striped">
 
-<div className="card shadow-sm">
+                        <thead>
 
-<div className="card-body">
+                            <tr>
 
-<h5>Total Value</h5>
+                                <th>Category</th>
+                                <th>Total</th>
 
-<h1>
+                            </tr>
 
-{summary.totalValue}
+                        </thead>
 
-</h1>
+                        <tbody>
 
-</div>
+                            {categories.map((category) => (
 
-</div>
+                                <tr key={category.category}>
 
-</div>
+                                    <td>{category.category}</td>
 
-</div>
+                                    <td>{category.total.toFixed(2)}</td>
 
-</>
+                                </tr>
 
-)}
+                            ))}
 
-<div className="card mt-4">
+                        </tbody>
 
-    <div className="card-body">
+                    </table>
 
-        <h3>Category Summary</h3>
+                </div>
 
-        <table className="table table-striped">
+            </div>
 
-            <thead>
+            <div className="row mt-5">
 
-                <tr>
+                <div className="col-md-6">
 
-                    <th>Category</th>
+                    <div className="card shadow-sm">
 
-                    <th>Total</th>
+                        <div className="card-body">
 
-                </tr>
+                            <h4>Category Totals (Bar Chart)</h4>
 
-            </thead>
+                            <CategoryBarChart data={categories} />
 
-            <tbody>
+                        </div>
 
-                {categories.map((category) => (
+                    </div>
 
-                    <tr key={category.category}>
+                </div>
 
-                        <td>{category.category}</td>
+                <div className="col-md-6">
 
-                        <td>{category.total.toFixed(2)}</td>
+                    <div className="card shadow-sm">
 
-                    </tr>
+                        <div className="card-body">
 
-                ))}
+                            <h4>Category Distribution</h4>
 
-            </tbody>
+                            <CategoryPieChart data={categories} />
 
-        </table>
+                        </div>
 
-    </div>
+                    </div>
 
-</div>
+                </div>
 
-<div className="card mt-5">
+            </div>
 
-<div className="card-body">
+            <div className="card mt-5">
 
-<h3>
+                <div className="card-body">
 
-Upload CSV
+                    <h3>Upload CSV</h3>
 
-</h3>
+                    <input
+                        className="form-control"
+                        type="file"
+                        onChange={(e) => setFile(e.target.files[0])}
+                    />
 
-<input
+                    <button
+                        className="btn btn-primary mt-3"
+                        onClick={upload}
+                    >
+                        Upload
+                    </button>
 
-className="form-control"
+                </div>
 
-type="file"
+            </div>
 
-onChange={(e)=>setFile(e.target.files[0])}
+        </div>
 
-/>
-
-<button
-
-className="btn btn-primary mt-3"
-
-onClick={upload}
-
->
-
-Upload
-
-</button>
-
-</div>
-
-</div>
-
-</div>
-
-);
+    );
 
 }
