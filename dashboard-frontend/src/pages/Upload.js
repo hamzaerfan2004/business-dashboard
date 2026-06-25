@@ -116,7 +116,12 @@ export default function Upload() {
         } catch (error) {
 
             setMessageType("danger");
-            setMessage("Upload failed.");
+
+            if (error.response?.data) {
+                setMessage(error.response.data);
+            } else {
+                setMessage("Upload failed.");
+            }
 
         } finally {
 
@@ -302,6 +307,12 @@ export default function Upload() {
 
                                             <span className="badge bg-success">
                                                 Processed
+                                            </span>
+
+                                        ) : upload.status === "failed" ? (
+
+                                            <span className="badge bg-danger">
+                                                Failed
                                             </span>
 
                                         ) : (

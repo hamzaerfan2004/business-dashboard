@@ -31,6 +31,13 @@ public class CSVService {
     }
 
     public Upload uploadCsv(MultipartFile file, String email) throws Exception {
+    	if (file.isEmpty()) {
+    		throw new RuntimeException("Uploaded file is empty.");
+    	}
+    	String filename = file.getOriginalFilename();
+    	if (filename == null || !filename.toLowerCase().endsWith(".csv")) {
+    		throw new RuntimeException("Only CSV files are allowed.");
+    	}
     	User user = userRepository.findByEmail(email)
     			.orElseThrow(() -> new RuntimeException("User not found"));
         Upload upload = new Upload();
@@ -41,17 +48,50 @@ public class CSVService {
         uploadRepository.save(upload);
 
         List<DataRecord> records = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8))) {
+        try (BufferedReader br = new BufferedReader(
+                new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8))) {
+
             String line;
+
             while ((line = br.readLine()) != null) {
+
+                if (line.isBlank()) {
+                    continue;
+                }
+
                 String[] values = line.split(",");
+
+                if (values.length != 3) {
+                    throw new RuntimeException("Invalid CSV format.");
+                }
+
                 DataRecord record = new DataRecord();
+
                 record.setUpload(upload);
-                record.setCategory(values[0]);
-                record.setDate(values[1]);
-                record.setNumericValue(Double.parseDouble(values[2]));
+                record.setCategory(values[0].trim());
+                record.setDate(values[1].trim());
+
+                try {
+
+                    record.setNumericValue(
+                            Double.parseDouble(values[2].trim()));
+
+                } catch (NumberFormatException e) {
+
+                    throw new RuntimeException(
+                            "Invalid numeric value: " + values[2]);
+
+                }
+
                 records.add(record);
             }
+
+        } catch (Exception e) {
+
+            upload.setStatus("failed");
+            uploadRepository.save(upload);
+
+            throw e;
         }
         dataRecordRepository.saveAll(records);
         upload.setStatus("processed");
