@@ -9,6 +9,7 @@ export default function Upload() {
     const [file, setFile] = useState();
     const [summary, setSummary] = useState(null);
     const [categories, setCategories] = useState([]);
+    const [uploads, setUploads] = useState([]);
 
     async function loadSummary() {
 
@@ -26,10 +27,20 @@ export default function Upload() {
 
     }
 
+    async function loadUploads() {
+
+        const response =
+            await api.get("/api/dashboard/uploads");
+
+        setUploads(response.data);
+
+    }
+
     useEffect(() => {
 
         loadSummary();
         loadCategories();
+        loadUploads();
 
     }, []);
 
@@ -45,6 +56,7 @@ export default function Upload() {
 
         loadSummary();
         loadCategories();
+        loadUploads();
 
     }
 
@@ -136,6 +148,72 @@ export default function Upload() {
                                     <td>{category.category}</td>
 
                                     <td>{category.total.toFixed(2)}</td>
+
+                                </tr>
+
+                            ))}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+            <div className="card mt-4">
+
+                <div className="card-body">
+
+                    <h3>Recent Uploads</h3>
+
+                    <table className="table table-striped">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>Filename</th>
+
+                                <th>Status</th>
+
+                                <th>Uploaded</th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            {uploads.map(upload => (
+
+                                <tr key={upload.id}>
+
+                                    <td>{upload.filename}</td>
+
+                                    <td>
+
+                                        {upload.status === "processed" ? (
+
+                                            <span className="badge bg-success">
+                                                Processed
+                                            </span>
+
+                                        ) : (
+
+                                            <span className="badge bg-warning text-dark">
+                                                Pending
+                                            </span>
+
+                                        )}
+
+                                    </td>
+
+                                    <td>
+
+                                        {new Date(upload.uploadDate).toLocaleString()}
+
+                                    </td>
 
                                 </tr>
 

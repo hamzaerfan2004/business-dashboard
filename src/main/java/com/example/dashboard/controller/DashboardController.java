@@ -8,6 +8,8 @@ import com.example.dashboard.dto.DashboardSummaryResponse;
 import java.util.List;
 import com.example.dashboard.dto.CategorySummaryResponse;
 import com.example.dashboard.service.DashboardService;
+import java.util.List;
+import com.example.dashboard.dto.UploadResponse;
 
 @RestController
 @RequestMapping("/api/dashboard")
@@ -27,5 +29,12 @@ public class DashboardController {
     @GetMapping("/category-summary")
     public List<CategorySummaryResponse> getCategorySummary() {
         return dashboardService.getCategorySummary();
+    }
+    
+    @GetMapping("/uploads")
+    public List<UploadResponse> getUploads() {
+
+        return dashboardService.getRecentUploads();
+
     }
 }

@@ -1,7 +1,11 @@
 package com.example.dashboard.service;
 
 import org.springframework.stereotype.Service;
+import java.util.List;
+import java.util.stream.Collectors;
 
+import com.example.dashboard.dto.UploadResponse;
+import com.example.dashboard.entity.Upload;
 import com.example.dashboard.dto.DashboardSummaryResponse;
 import com.example.dashboard.dto.CategorySummaryResponse;
 import com.example.dashboard.repository.DataRecordRepository;
@@ -43,6 +47,26 @@ public class DashboardService {
                 totalRecords,
                 totalValue
         );
+    }
+    
+    public List<UploadResponse> getRecentUploads() {
+
+        List<Upload> uploads =
+                uploadRepository.findAllByOrderByUploadDateDesc();
+
+        return uploads.stream()
+
+                .map(upload -> new UploadResponse(
+
+                        upload.getId(),
+                        upload.getFilename(),
+                        upload.getStatus(),
+                        upload.getUploadDate()
+
+                ))
+
+                .collect(Collectors.toList());
+
     }
     
     public java.util.List<CategorySummaryResponse> getCategorySummary() {
