@@ -5,6 +5,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.dashboard.dto.DashboardSummaryResponse;
+import java.util.List;
+import com.example.dashboard.dto.CategorySummaryResponse;
 import com.example.dashboard.service.DashboardService;
 
 @RestController
@@ -20,5 +22,10 @@ public class DashboardController {
     @GetMapping("/summary")
     public DashboardSummaryResponse getSummary() {
         return dashboardService.getSummary();
+    }
+    
+    @GetMapping("/category-summary")
+    public List<CategorySummaryResponse> getCategorySummary() {
+        return dashboardService.getCategorySummary();
     }
 }

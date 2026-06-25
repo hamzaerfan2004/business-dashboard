@@ -3,6 +3,7 @@ package com.example.dashboard.service;
 import org.springframework.stereotype.Service;
 
 import com.example.dashboard.dto.DashboardSummaryResponse;
+import com.example.dashboard.dto.CategorySummaryResponse;
 import com.example.dashboard.repository.DataRecordRepository;
 import com.example.dashboard.repository.UploadRepository;
 
@@ -42,5 +43,11 @@ public class DashboardService {
                 totalRecords,
                 totalValue
         );
+    }
+    
+    public java.util.List<CategorySummaryResponse> getCategorySummary() {
+
+        return dataRecordRepository.getCategorySummary();
+
     }
 }

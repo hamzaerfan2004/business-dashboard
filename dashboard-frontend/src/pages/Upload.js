@@ -8,6 +8,8 @@ export default function Upload() {
 
     const [summary, setSummary] = useState(null);
 
+    const [categories, setCategories] = useState([]);
+
     async function loadSummary() {
 
         const response = await api.get("/api/dashboard/summary");
@@ -16,9 +18,19 @@ export default function Upload() {
 
     }
 
+    async function loadCategories() {
+
+        const response = await api.get("/api/dashboard/category-summary");
+
+        setCategories(response.data);
+
+    }
+
     useEffect(() => {
 
         loadSummary();
+
+        loadCategories();
 
     }, []);
 
@@ -34,6 +46,7 @@ export default function Upload() {
 
         loadSummary();
 
+        loadCategories();
     }
 
     return (
@@ -113,6 +126,48 @@ value={summary.totalRecords}
 </>
 
 )}
+
+<div className="card mt-4">
+
+    <div className="card-body">
+
+        <h3>Category Summary</h3>
+
+        <table className="table table-striped">
+
+            <thead>
+
+                <tr>
+
+                    <th>Category</th>
+
+                    <th>Total</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                {categories.map((category) => (
+
+                    <tr key={category.category}>
+
+                        <td>{category.category}</td>
+
+                        <td>{category.total.toFixed(2)}</td>
+
+                    </tr>
+
+                ))}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
 
 <div className="card mt-5">
 
