@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import api from "../api";
+import SummaryCard from "../components/SummaryCard";
 
 export default function Upload() {
 
@@ -37,47 +38,120 @@ export default function Upload() {
 
     return (
 
-        <div>
+<div className="container mt-5">
 
-            <h1>Business Dashboard</h1>
+<h1 className="text-center mb-5">
 
-            {summary && (
+Business Dashboard
 
-                <div>
+</h1>
 
-                    <h3>Dashboard Summary</h3>
+{summary && (
 
-                    <p>Total Uploads: {summary.totalUploads}</p>
+<>
 
-                    <p>Processed Uploads: {summary.processedUploads}</p>
+<div className="row">
 
-                    <p>Pending Uploads: {summary.pendingUploads}</p>
+<SummaryCard
 
-                    <p>Total Records: {summary.totalRecords}</p>
+title="Total Uploads"
 
-                    <p>Total Value: {summary.totalValue}</p>
+value={summary.totalUploads}
 
-                </div>
+/>
 
-            )}
+<SummaryCard
 
-            <hr />
+title="Processed"
 
-            <h2>Upload CSV</h2>
+value={summary.processedUploads}
 
-            <input
-                type="file"
-                onChange={(e) => setFile(e.target.files[0])}
-            />
+/>
 
-            <br /><br />
+<SummaryCard
 
-            <button onClick={upload}>
-                Upload
-            </button>
+title="Pending"
 
-        </div>
+value={summary.pendingUploads}
 
-    );
+/>
+
+<SummaryCard
+
+title="Records"
+
+value={summary.totalRecords}
+
+/>
+
+</div>
+
+<div className="row">
+
+<div className="col-md-6">
+
+<div className="card shadow-sm">
+
+<div className="card-body">
+
+<h5>Total Value</h5>
+
+<h1>
+
+{summary.totalValue}
+
+</h1>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</>
+
+)}
+
+<div className="card mt-5">
+
+<div className="card-body">
+
+<h3>
+
+Upload CSV
+
+</h3>
+
+<input
+
+className="form-control"
+
+type="file"
+
+onChange={(e)=>setFile(e.target.files[0])}
+
+/>
+
+<button
+
+className="btn btn-primary mt-3"
+
+onClick={upload}
+
+>
+
+Upload
+
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+);
 
 }
