@@ -69,9 +69,28 @@ public class DashboardService {
 
     }
     
+    public List<UploadResponse> searchUploads(String filename) {
+
+        return uploadRepository
+                .findByFilenameContainingIgnoreCaseOrderByUploadDateDesc(filename)
+                .stream()
+                .map(upload -> new UploadResponse(
+                        upload.getId(),
+                        upload.getFilename(),
+                        upload.getStatus(),
+                        upload.getUploadDate()
+                ))
+                .collect(Collectors.toList());
+
+    }
+    
     public java.util.List<CategorySummaryResponse> getCategorySummary() {
 
         return dataRecordRepository.getCategorySummary();
 
+    }
+    
+    public void deleteUpload(Long id) {
+    	uploadRepository.deleteById(id);
     }
 }

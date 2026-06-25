@@ -11,4 +11,8 @@ public interface UploadRepository extends JpaRepository<Upload, Long> {
     long countByStatus(String status);
     
     List<Upload> findAllByOrderByUploadDateDesc();
+    
+    List<Upload> findByFilenameContainingIgnoreCaseOrderByUploadDateDesc(String filename);
+    
+    void deleteById(Long id);
 }

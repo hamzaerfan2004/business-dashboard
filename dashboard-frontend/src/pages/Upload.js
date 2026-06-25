@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import api from "../api";
 import SummaryCard from "../components/SummaryCard";
 import CategoryBarChart from "../components/CategoryBarChart";
@@ -10,6 +10,11 @@ export default function Upload() {
     const [summary, setSummary] = useState(null);
     const [categories, setCategories] = useState([]);
     const [uploads, setUploads] = useState([]);
+    const [search, setSearch] = useState("");
+    const [message, setMessage] = useState("");
+    const [loading, setLoading] = useState(false);
+    const fileInputRef = useRef(null);
+    const [messageType, setMessageType] = useState("success");
 
     async function loadSummary() {
 
@@ -36,6 +41,23 @@ export default function Upload() {
 
     }
 
+    async function searchUploads(value) {
+
+        setSearch(value);
+
+        if (value.trim() === "") {
+            await loadUploads();
+            return;
+        }
+
+        const response = await api.get(
+            `/api/dashboard/uploads/search?filename=${value}`
+        );
+
+        setUploads(response.data);
+
+    }
+
     useEffect(() => {
 
         loadSummary();
@@ -44,19 +66,89 @@ export default function Upload() {
 
     }, []);
 
+    useEffect(() => {
+
+        if (!message) return;
+
+        const timer = setTimeout(() => {
+
+            setMessage("");
+
+        }, 3000);
+
+        return () => clearTimeout(timer);
+
+    }, [message]);
+
     async function upload() {
 
-        const form = new FormData();
+        if (!file) {
+            setMessageType("warning");
+            setMessage("Please choose a CSV file.");
+            return;
+        }
+        if (!file.name.toLowerCase().endsWith(".csv")) {
+            setMessageType("warning");
+            setMessage("Only CSV files are allowed.");
+            return;
+        }
 
-        form.append("file", file);
+        try {
 
-        await api.post("/api/uploads", form);
+            setLoading(true);
 
-        alert("Upload Successful");
+            const form = new FormData();
 
-        loadSummary();
-        loadCategories();
-        loadUploads();
+            form.append("file", file);
+
+            await api.post("/api/uploads", form);
+
+            setFile(null);
+            fileInputRef.current.value = "";
+
+            setMessageType("success");
+            setMessage("Upload completed successfully.");
+
+            await loadSummary();
+            await loadCategories();
+            await loadUploads();
+
+        } catch (error) {
+
+            setMessageType("danger");
+            setMessage("Upload failed.");
+
+        } finally {
+
+            setLoading(false);
+
+        }
+
+    }
+
+    async function deleteUpload(id) {
+
+        if (!window.confirm("Delete this upload?")) {
+            return;
+        }
+
+        try {
+
+            await api.delete(`/api/dashboard/uploads/${id}`);
+
+            setMessageType("success");
+            setMessage("Upload deleted successfully.");
+
+            await loadSummary();
+            await loadCategories();
+            await loadUploads();
+
+        } catch (error) {
+
+            setMessageType("danger");
+            setMessage("Delete failed.");
+
+        }
 
     }
 
@@ -160,6 +252,17 @@ export default function Upload() {
                 </div>
 
             </div>
+            <br></br>
+            <div className="mb-3">
+
+                <input
+                    className="form-control"
+                    placeholder="Search uploads..."
+                    value={search}
+                    onChange={(e) => searchUploads(e.target.value)}
+                />
+
+            </div>
 
             <div className="card mt-4">
 
@@ -178,6 +281,8 @@ export default function Upload() {
                                 <th>Status</th>
 
                                 <th>Uploaded</th>
+
+                                <th>Action</th>
 
                             </tr>
 
@@ -212,6 +317,17 @@ export default function Upload() {
                                     <td>
 
                                         {new Date(upload.uploadDate).toLocaleString()}
+
+                                    </td>
+
+                                    <td>
+
+                                        <button
+                                            className="btn btn-danger btn-sm"
+                                            onClick={() => deleteUpload(upload.id)}
+                                        >
+                                            Delete
+                                        </button>
 
                                     </td>
 
@@ -263,6 +379,16 @@ export default function Upload() {
 
             </div>
 
+            {message && (
+
+                <div className={`alert alert-${messageType} mt-3`}>
+
+                    {message}
+
+                </div>
+
+            )}
+
             <div className="card mt-5">
 
                 <div className="card-body">
@@ -270,23 +396,35 @@ export default function Upload() {
                     <h3>Upload CSV</h3>
 
                     <input
+                        ref={fileInputRef}
                         className="form-control"
                         type="file"
+                        accept=".csv"
                         onChange={(e) => setFile(e.target.files[0])}
                     />
 
                     <button
                         className="btn btn-primary mt-3"
                         onClick={upload}
+                        disabled={!file || loading}
                     >
-                        Upload
+                        {loading ? "Uploading..." : "Upload"}
                     </button>
 
                 </div>
 
             </div>
+            <footer className="text-center text-muted mt-5 mb-4">
 
+                Business Dashboard © 2026
+
+                <br />
+
+                Built with React, Spring Boot & MySQL
+
+            </footer>
         </div>
+        
 
     );
 
