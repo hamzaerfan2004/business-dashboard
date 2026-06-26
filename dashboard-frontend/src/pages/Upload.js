@@ -3,9 +3,11 @@ import api from "../api";
 import SummaryCard from "../components/SummaryCard";
 import CategoryBarChart from "../components/CategoryBarChart";
 import CategoryPieChart from "../components/CategoryPieChart";
+import { jwtDecode } from "jwt-decode";
 
 export default function Upload() {
 
+    const [userEmail, setUserEmail] = useState("");
     const [file, setFile] = useState();
     const [summary, setSummary] = useState(null);
     const [categories, setCategories] = useState([]);
@@ -79,6 +81,23 @@ export default function Upload() {
         return () => clearTimeout(timer);
 
     }, [message]);
+
+    useEffect(() => {
+
+        const token = localStorage.getItem("token");
+
+        if (!token) {
+
+            window.location = "/";
+            return;
+
+        }
+
+        const decoded = jwtDecode(token);
+
+        setUserEmail(decoded.sub);
+
+    }, []);
 
     async function upload() {
 
@@ -157,13 +176,38 @@ export default function Upload() {
 
     }
 
+    function logout() {
+
+        if (window.confirm("Are you sure you want to logout?")) {
+
+            localStorage.removeItem("token");
+
+            window.location = "/";
+
+        }
+
+    }
+
     return (
 
         <div className="container mt-5">
 
-            <h1 className="text-center mb-5">
-                Business Dashboard
-            </h1>
+            <div className="d-flex justify-content-between align-items-center mb-5">
+                <div>
+                    <h1>Business Dashboard</h1>
+
+                    <p className="text-muted">
+                        Logged in ad {userEmail}
+                    </p>
+                </div>
+                <button
+                    className="btn btn-outline-danger"
+                    onClick={logout}
+                >
+                    Logout
+                </button>
+
+            </div>
 
             {summary && (
 
