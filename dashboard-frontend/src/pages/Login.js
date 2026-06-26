@@ -1,5 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "../css/Login.css";
 
 export default function Login() {
 
@@ -21,32 +23,66 @@ export default function Login() {
         window.location="/upload";
     }
 
-    return(
+    return (
 
-        <div>
+    <div className="login-container">
 
-            <h1>Business Dashboard</h1>
+        <div className="card shadow login-card">
 
-            <input
-                placeholder="Email"
-                onChange={(e)=>setEmail(e.target.value)}
-            />
+            <div className="card-body p-4">
 
-            <br/>
+                <h2 className="text-center login-title">
 
-            <input
-                type="password"
-                placeholder="Password"
-                onChange={(e)=>setPassword(e.target.value)}
-            />
+                    Business Dashboard
 
-            <br/>
+                </h2>
 
-            <button onClick={login}>
-                Login
-            </button>
+                <p className="text-center login-subtitle">
+
+                    Sign in to continue
+
+                </p>
+
+                <input
+                    className="form-control mb-3"
+                    placeholder="Email"
+                    onChange={(e)=>setEmail(e.target.value)}
+                />
+
+                <input
+                    className="form-control mb-3"
+                    type="password"
+                    placeholder="Password"
+                    onChange={(e)=>setPassword(e.target.value)}
+                />
+
+                <button
+                    className="btn btn-primary w-100"
+                    onClick={login}
+                >
+                    Login
+                </button>
+
+                <p className="text-center mt-3">
+
+                    Don't have an account?
+
+                </p>
+
+                <button
+                    className="btn btn-outline-secondary w-100"
+                    onClick={() => window.location="/register"}
+                >
+
+                    Register
+
+                </button>
+
+            </div>
 
         </div>
+
+    </div>
 
     );
 }

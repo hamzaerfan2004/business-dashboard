@@ -19,9 +19,21 @@ public class UserService {
 	}
 	
 	public User register(User user) {
-		user.setPasswordHash(passwordEncoder.encode(user.getPasswordHash()));
-		user.setRole("USER");
-		return userRepository.save(user);
+
+	    if (userRepository.findByEmail(user.getEmail()).isPresent()) {
+
+	        throw new RuntimeException("Email already exists.");
+
+	    }
+
+	    user.setPasswordHash(
+	        passwordEncoder.encode(user.getPasswordHash())
+	    );
+
+	    user.setRole("USER");
+
+	    return userRepository.save(user);
+
 	}
 	
 	public User findByEmail(String email) {

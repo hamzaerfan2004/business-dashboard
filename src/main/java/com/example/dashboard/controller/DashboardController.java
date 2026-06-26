@@ -12,6 +12,7 @@ import java.util.List;
 import com.example.dashboard.dto.UploadResponse;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import java.security.Principal;
 
 @RestController
 @RequestMapping("/api/dashboard")
@@ -24,34 +25,34 @@ public class DashboardController {
     }
 
     @GetMapping("/summary")
-    public DashboardSummaryResponse getSummary() {
-        return dashboardService.getSummary();
+    public DashboardSummaryResponse getSummary( Principal principal ) {
+        return dashboardService.getSummary(principal.getName());
     }
     
     @GetMapping("/category-summary")
-    public List<CategorySummaryResponse> getCategorySummary() {
-        return dashboardService.getCategorySummary();
+    public List<CategorySummaryResponse> getCategorySummary( Principal principal ) {
+        return dashboardService.getCategorySummary(principal.getName());
     }
     
     @GetMapping("/uploads")
-    public List<UploadResponse> getUploads() {
+    public List<UploadResponse> getUploads( Principal principal ) {
 
-        return dashboardService.getRecentUploads();
+        return dashboardService.getRecentUploads(principal.getName());
 
     }
     
     @GetMapping("/uploads/search")
     public List<UploadResponse> searchUploads(
-            @RequestParam String filename) {
+            @RequestParam String filename, Principal principal) {
 
-        return dashboardService.searchUploads(filename);
+        return dashboardService.searchUploads(filename, principal.getName());
 
     }
     
     @DeleteMapping("/uploads/{id}")
-    public void deleteUpload(@PathVariable Long id) {
+    public void deleteUpload(@PathVariable Long id, Principal principal) {
 
-        dashboardService.deleteUpload(id);
+        dashboardService.deleteUpload(id, principal.getName());
 
     }
 }
