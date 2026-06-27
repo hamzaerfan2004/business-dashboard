@@ -1,119 +1,186 @@
-# Business Operations & Analytics Dashboard
+# Business Dashboard
 
-Full-stack dashboard for businesses to upload, view, analyze, and report on CSV data.  
-Built with **Spring Boot**, **PostgreSQL**, and **React.js**.  
+A full-stack Business Dashboard application built with React, Spring Boot, PostgreSQL, JWT Authentication, and Bootstrap.
 
----
+## Features
 
-## **Tech Stack**
+* User Registration
+* User Login with JWT Authentication
+* Protected Dashboard
+* CSV File Upload
+* CSV Validation
+* User-Specific Data Isolation
+* Search Uploaded Files
+* Delete Uploaded Files
+* Dashboard Summary Cards
+* Category Summary Table
+* Bar Chart Visualization
+* Pie Chart Visualization
+* Logout Functionality
+* Global Error Handling
 
-- **Backend:** Spring Boot, Spring Data JPA, Spring Security  
-- **Database:** PostgreSQL  
-- **Frontend:** React.js, Chart.js / Recharts  
-- **CSV Processing:** Apache Commons CSV  
-- **PDF Reports:** Apache PDFBox (or iText 7 optional)  
-- **Deployment:** Railway / Render / AWS (optional)  
+## Technology Stack
 
----
+### Frontend
 
-## **Features**
+* React
+* React Router
+* Axios
+* Bootstrap
+* Recharts
 
-- **User Authentication**: Login/Register, roles (Admin/User)  
-- **CSV Upload**: Users can upload CSV files, validated for structure  
-- **Data Processing & KPIs**: Sum, average, min, max, counts, top N trends  
-- **Dashboard & Charts**: Line, bar, pie charts with filters  
-- **Reports**: Export CSV and PDF summary reports  
-- **Admin Panel** (optional): View all users, uploads, and manage data  
+### Backend
 
----
+* Spring Boot
+* Spring Security
+* Spring Data JPA
+* JWT Authentication
 
-## **Project Structure**
+### Database
 
-business-dashboard/
-├─ backend/ # Spring Boot backend
-│ ├─ src/main/java/... # Java source code (entities, repos, services, controllers)
-│ ├─ src/main/resources/ # application.yml, templates (if any)
-│ └─ pom.xml
-├─ dashboard-frontend/ # React frontend
-│ ├─ src/ # React components
-│ ├─ package.json
-│ └─ public/
-├─ .gitignore
-└─ README.md
-
+* PostgreSQL
 
 ---
 
-## **Setup Instructions**
+## Database Setup
 
-### **1. Clone the repository**
+Create a PostgreSQL database:
+
+```sql
+CREATE DATABASE dashboard;
+```
+
+Create a PostgreSQL user:
+
+```sql
+CREATE USER dashboard_user WITH PASSWORD 'password';
+GRANT ALL PRIVILEGES ON DATABASE dashboard TO dashboard_user;
+```
+
+---
+
+## Backend Configuration
+
+Update `application.yaml`:
+
+```yaml
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/dashboard
+    username: dashboard_user
+    password: password
+```
+
+---
+
+## Running the Backend
+
+Navigate to the backend project:
 
 ```bash
-git clone https://github.com/hamzaerfan2004/business-dashboard.git
+cd dashboard
+```
 
-2. Backend (Spring Boot)
-cd backend
-# Install dependencies and build
-mvn clean install
-# Run Spring Boot server
+Run:
+
+```bash
 mvn spring-boot:run
+```
 
-Server runs at: http://localhost:8080
+Backend runs on:
 
-Make sure PostgreSQL is running and your DB credentials are set in application.yml or environment variables.
+```text
+http://localhost:8080
+```
 
-3. Frontend (React)
-cd dashboard-frontend
+---
+
+## Running the Frontend
+
+Navigate to the frontend:
+
+```bash
+cd frontend
+```
+
+Install dependencies:
+
+```bash
 npm install
+```
+
+Start React:
+
+```bash
 npm start
+```
 
+Frontend runs on:
 
-Frontend runs at: http://localhost:3000
+```text
+http://localhost:3000
+```
 
-Ensure the frontend API URLs point to your backend (default http://localhost:8080/api/...)
+---
 
-4. Testing the App
+## Test Accounts
 
-Open frontend in browser
+Create accounts through the Register page.
 
-Register a new user / login
+Example:
 
-Upload a sample CSV
+Email:
 
-View charts on the dashboard
+```text
+hamza@test.com
+```
 
-Generate a CSV/PDF report
+Password:
 
+```text
+password123
+```
 
-5. Sample CSV Format
-product,category,sales,quantity,date
-Product A,Category 1,120,10,2026-01-01
-Product B,Category 1,150,15,2026-01-02
-Product C,Category 2,90,5,2026-01-03
+---
 
+## CSV Format
 
-Columns must match your CSV processing logic in backend
+Example valid CSV:
 
-Notes
+```csv
+Food,2026-01-01,100
+Transport,2026-01-02,200
+Entertainment,2026-01-03,150
+```
 
-Keep environment variables (DB credentials, JWT secret) out of GitHub.
+---
 
-Backend uses Spring Security with JWT or session-based auth.
+## Validation Rules
 
-Dashboard charts automatically calculate KPIs from uploaded CSVs.
+* File must be CSV
+* Empty files rejected
+* Blank lines ignored
+* Missing columns rejected
+* Extra columns rejected
+* Invalid numeric values rejected
 
-Optional: deploy backend and frontend separately for live demo.
+---
 
-Future Improvements / Extensions
+## Security Features
 
-Add role-based access for more granular permissions
+* Password hashing using BCrypt
+* JWT Authentication
+* Protected Dashboard Routes
+* User-specific data access
+* Upload ownership verification
 
-Add automated email reports
+---
 
-Add multi-file CSV uploads and combined analytics
+## Author
 
-Deploy full project with Docker for reproducibility
+Hamza Erfan
 
-License
+BSc Computer Science
 
-This project is for educational / portfolio purposes. No license included.
+Royal Holloway, University of London
+

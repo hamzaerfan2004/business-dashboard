@@ -497,7 +497,7 @@ export default function Upload() {
 
                 <br />
 
-                Built with React, Spring Boot & MySQL
+                Built with React, Spring Boot & PostgreSQL
 
             </footer>
         </div>
