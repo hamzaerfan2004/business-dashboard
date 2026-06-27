@@ -34,6 +34,9 @@ public class CSVService {
     	if (file.isEmpty()) {
     		throw new RuntimeException("Uploaded file is empty.");
     	}
+    	if (file.getSize() > 5 * 1024 * 1024) {
+    	    throw new RuntimeException("Maximum file size is 5 MB.");
+    	}
     	String filename = file.getOriginalFilename();
     	if (filename == null || !filename.toLowerCase().endsWith(".csv")) {
     		throw new RuntimeException("Only CSV files are allowed.");

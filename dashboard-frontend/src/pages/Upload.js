@@ -62,6 +62,8 @@ export default function Upload() {
 
     useEffect(() => {
 
+        document.title = "Business Dashboard";
+
         loadSummary();
         loadCategories();
         loadUploads();
@@ -197,7 +199,7 @@ export default function Upload() {
                     <h1>Business Dashboard</h1>
 
                     <p className="text-muted">
-                        Logged in ad {userEmail}
+                        Logged in as {userEmail}
                     </p>
                 </div>
                 <button
@@ -247,7 +249,17 @@ export default function Upload() {
 
                                     <h5>Total Value</h5>
 
-                                    <h1>{summary.totalValue}</h1>
+                                    <h1>
+
+                                        {summary.totalValue.toLocaleString(undefined, {
+
+                                            minimumFractionDigits: 2,
+
+                                            maximumFractionDigits: 2
+
+                                        })}
+
+                                    </h1>
 
                                 </div>
 
@@ -319,80 +331,90 @@ export default function Upload() {
 
                     <h3>Recent Uploads</h3>
 
-                    <table className="table table-striped">
+                    {uploads.length === 0 ? (
 
-                        <thead>
+                        <p className="text-center text-muted mt-3">
+                            No uploads found.
+                        </p>
 
-                            <tr>
+                    ) : (
 
-                                <th>Filename</th>
+                        <table className="table table-striped">
 
-                                <th>Status</th>
+                            <thead>
 
-                                <th>Uploaded</th>
+                                <tr>
 
-                                <th>Action</th>
+                                    <th>Filename</th>
 
-                            </tr>
+                                    <th>Status</th>
 
-                        </thead>
+                                    <th>Uploaded</th>
 
-                        <tbody>
-
-                            {uploads.map(upload => (
-
-                                <tr key={upload.id}>
-
-                                    <td>{upload.filename}</td>
-
-                                    <td>
-
-                                        {upload.status === "processed" ? (
-
-                                            <span className="badge bg-success">
-                                                Processed
-                                            </span>
-
-                                        ) : upload.status === "failed" ? (
-
-                                            <span className="badge bg-danger">
-                                                Failed
-                                            </span>
-
-                                        ) : (
-
-                                            <span className="badge bg-warning text-dark">
-                                                Pending
-                                            </span>
-
-                                        )}
-
-                                    </td>
-
-                                    <td>
-
-                                        {new Date(upload.uploadDate).toLocaleString()}
-
-                                    </td>
-
-                                    <td>
-
-                                        <button
-                                            className="btn btn-danger btn-sm"
-                                            onClick={() => deleteUpload(upload.id)}
-                                        >
-                                            Delete
-                                        </button>
-
-                                    </td>
+                                    <th>Action</th>
 
                                 </tr>
 
-                            ))}
+                            </thead>
 
-                        </tbody>
+                            <tbody>
 
-                    </table>
+                                {uploads.map(upload => (
+
+                                    <tr key={upload.id}>
+
+                                        <td>{upload.filename}</td>
+
+                                        <td>
+
+                                            {upload.status === "processed" ? (
+
+                                                <span className="badge bg-success">
+                                                    Processed
+                                                </span>
+
+                                            ) : upload.status === "failed" ? (
+
+                                                <span className="badge bg-danger">
+                                                    Failed
+                                                </span>
+
+                                            ) : (
+
+                                                <span className="badge bg-warning text-dark">
+                                                    Pending
+                                                </span>
+
+                                            )}
+
+                                        </td>
+
+                                        <td>
+
+                                            {new Date(upload.uploadDate).toLocaleString()}
+
+                                        </td>
+
+                                        <td>
+
+                                            <button
+                                                className="btn btn-danger btn-sm"
+                                                onClick={() => deleteUpload(upload.id)}
+                                            >
+                                                Delete
+                                            </button>
+
+                                        </td>
+
+                                    </tr>
+
+                                ))}
+
+                            </tbody>
+
+                        </table>
+
+                    )}
 
                 </div>
 
